@@ -23,6 +23,20 @@ class ViewController: UIViewController {
         timeLine.lifeCircleProgress()
 
         print("gos")
+
+        let allframes = timeLine.progressEachFrame()
+
+        for eachItem in allframes {
+            print(eachItem)
+            let vi = UIView()
+            vi.layer.borderColor = UIColor.black.cgColor
+            vi.layer.borderWidth = 1
+            vi.layer.cornerRadius = 5
+            vi.layer.masksToBounds = true
+            vi.frame = eachItem
+            self.view.addSubview(vi)
+            vi.backgroundColor = UIColor.yellow
+        }
     }
 
 
