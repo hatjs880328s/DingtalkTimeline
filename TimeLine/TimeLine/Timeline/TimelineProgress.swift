@@ -31,6 +31,12 @@ import IISwiftBaseUti
 
 class TimelineProgress: NSObject {
 
+    /// 每一个小时的高度
+    public let eachHeight: CGFloat = 48
+
+    /// 最大宽度
+    public let maxWidth: CGFloat = UIScreen.main.bounds.size.width
+
     /// 外部数据源数组
     var allItems: [OutLinkItemModel] = []
 
@@ -39,12 +45,6 @@ class TimelineProgress: NSObject {
 
     /// 按层级拆分后的二维数组
     var lvGroups: [[LinkItem]] = []
-
-    /// 最大宽度
-    public let maxWidth: CGFloat = UIScreen.main.bounds.size.width
-
-    /// 每一个小时的高度
-    public let eachHeight: CGFloat = 48
 
     override init() {
         super.init()
@@ -183,7 +183,7 @@ class TimelineProgress: NSObject {
         }
     }
 
-    /// 循环处理所有事件，获得所有的frame
+    /// [5]循环处理所有事件，获得所有的frame
     @objc public func progressEachFrame() -> [CGRect] {
         var result: [CGRect] = []
         for eachItem in self.progressItems {
@@ -193,7 +193,7 @@ class TimelineProgress: NSObject {
             let originX = width * CGFloat(eachItem.lvl)
             result.append(CGRect(x: originX, y: originY, width: width, height: CGFloat(height)))
         }
-        
+
         return result
     }
 
