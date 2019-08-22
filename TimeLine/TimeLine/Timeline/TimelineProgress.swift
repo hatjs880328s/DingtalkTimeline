@@ -12,6 +12,7 @@
 
 
 import UIKit
+import IISwiftBaseUti
 
 /*
  Feature:
@@ -38,6 +39,12 @@ class TimelineProgress: NSObject {
 
     /// 按层级拆分后的二维数组
     var lvGroups: [[LinkItem]] = []
+
+    /// 最大宽度
+    public let maxWidth: CGFloat = UIScreen.main.bounds.size.width
+
+    /// 每一个小时的高度
+    public let eachHeight: CGFloat = 48
 
     override init() {
         super.init()
@@ -176,6 +183,20 @@ class TimelineProgress: NSObject {
         }
     }
 
+    /// 循环处理所有事件，获得所有的frame
+    private func progressEachFrame() -> [CGRect] {
+        var result: [CGRect] = []
+        for eachItem in self.progressItems {
+            let width = self.maxWidth / CGFloat(eachItem.lvlCount)
+            let height = (eachItem.endTime.timeIntervalSince1970 - eachItem.startTime.timeIntervalSince1970) * 48 / 60 / 60
+            let originX = CGFloat(eachItem.startTime.hours * 48 + eachItem.startTime.minutes * 48 / 60)
+            let originY = width * CGFloat(eachItem.lvl)
+            result.append(CGRect(x: originX, y: originY, width: width, height: CGFloat(height)))
+        }
+
+        return result
+    }
+
 }
 
 /// 生成链表item的数据源
@@ -243,10 +264,10 @@ extension LinkItem: Comparable {
             if lhs.endTime == rhs.endTime {
                 return true
             } else {
-                return lhs.endTime < rhs.endTime
+                return lhs.endTime.timeIntervalSince1970 < rhs.endTime.timeIntervalSince1970
             }
         } else {
-            return lhs.startTime < rhs.startTime
+            return lhs.startTime.timeIntervalSince1970 < rhs.startTime.timeIntervalSince1970
         }
     }
 

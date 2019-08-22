@@ -1,0 +1,114 @@
+PODS:
+  - Differentiator (4.0.1)
+  - II18N (0.1.0)
+  - IISwiftBaseUti (1.3.20):
+    - II18N
+    - IISwiftBaseUti/IIAspects (= 1.3.20)
+    - IISwiftBaseUti/IIBaseUti (= 1.3.20)
+    - IISwiftBaseUti/IICacheStorage (= 1.3.20)
+    - IISwiftBaseUti/IIComponent (= 1.3.20)
+    - IISwiftBaseUti/IICoreExtension (= 1.3.20)
+    - IISwiftBaseUti/IIHardWareAuthRequest (= 1.3.20)
+    - IISwiftBaseUti/IIRecognition (= 1.3.20)
+    - IISwiftBaseUti/IISearchBar (= 1.3.20)
+    - IISwiftBaseUti/YYCache (= 1.3.20)
+    - RxCocoa
+    - RxDataSources
+    - RxSwift
+    - SnapKit (~> 4.2.0)
+  - IISwiftBaseUti/IIAspects (1.3.20):
+    - II18N
+    - RxCocoa
+    - RxDataSources
+    - RxSwift
+    - SnapKit (~> 4.2.0)
+  - IISwiftBaseUti/IIBaseUti (1.3.20):
+    - II18N
+    - RxCocoa
+    - RxDataSources
+    - RxSwift
+    - SnapKit (~> 4.2.0)
+  - IISwiftBaseUti/IICacheStorage (1.3.20):
+    - II18N
+    - IISwiftBaseUti/YYCache
+    - RxCocoa
+    - RxDataSources
+    - RxSwift
+    - SnapKit (~> 4.2.0)
+  - IISwiftBaseUti/IIComponent (1.3.20):
+    - II18N
+    - RxCocoa
+    - RxDataSources
+    - RxSwift
+    - SnapKit (~> 4.2.0)
+  - IISwiftBaseUti/IICoreExtension (1.3.20):
+    - II18N
+    - RxCocoa
+    - RxDataSources
+    - RxSwift
+    - SnapKit (~> 4.2.0)
+  - IISwiftBaseUti/IIHardWareAuthRequest (1.3.20):
+    - II18N
+    - IISwiftBaseUti/IIBaseUti
+    - RxCocoa
+    - RxDataSources
+    - RxSwift
+    - SnapKit (~> 4.2.0)
+  - IISwiftBaseUti/IIRecognition (1.3.20):
+    - II18N
+    - IISwiftBaseUti/IICoreExtension
+    - RxCocoa
+    - RxDataSources
+    - RxSwift
+    - SnapKit (~> 4.2.0)
+  - IISwiftBaseUti/IISearchBar (1.3.20):
+    - II18N
+    - RxCocoa
+    - RxDataSources
+    - RxSwift
+    - SnapKit (~> 4.2.0)
+  - IISwiftBaseUti/YYCache (1.3.20):
+    - II18N
+    - RxCocoa
+    - RxDataSources
+    - RxSwift
+    - SnapKit (~> 4.2.0)
+  - RxCocoa (5.0.0):
+    - RxRelay (~> 5)
+    - RxSwift (~> 5)
+  - RxDataSources (4.0.1):
+    - Differentiator (~> 4.0)
+    - RxCocoa (~> 5.0)
+    - RxSwift (~> 5.0)
+  - RxRelay (5.0.0):
+    - RxSwift (~> 5)
+  - RxSwift (5.0.0)
+  - SnapKit (4.2.0)
+
+DEPENDENCIES:
+  - IISwiftBaseUti (~> 1.3.20)
+
+SPEC REPOS:
+  https://github.com/cocoapods/specs.git:
+    - Differentiator
+    - II18N
+    - IISwiftBaseUti
+    - RxCocoa
+    - RxDataSources
+    - RxRelay
+    - RxSwift
+    - SnapKit
+
+SPEC CHECKSUMS:
+  Differentiator: 886080237d9f87f322641dedbc5be257061b0602
+  II18N: 323a17a6c4af02c6fed5d942dbdf5e540e2643b0
+  IISwiftBaseUti: e562f9d5dfc3c9fc5e6ab2c27f380ca5aa5228c1
+  RxCocoa: fcf32050ac00d801f34a7f71d5e8e7f23026dcd8
+  RxDataSources: efee07fa4de48477eca0a4611e6d11e2da9c1114
+  RxRelay: 4f7409406a51a55cd88483f21ed898c234d60f18
+  RxSwift: 8b0671caa829a763bbce7271095859121cbd895f
+  SnapKit: fe8a619752f3f27075cc9a90244d75c6c3f27e2a
+
+PODFILE CHECKSUM: e5d2fc147ab6efe88320cb47dcc2698a7ad5153f
+
+COCOAPODS: 1.7.1
