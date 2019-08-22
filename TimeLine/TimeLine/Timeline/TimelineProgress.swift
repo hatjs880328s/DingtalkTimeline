@@ -44,46 +44,57 @@ class TimelineProgress: NSObject {
         initData()
     }
 
+    @objc public func lifeCircleProgress() {
+        // 将外部数据源处理为内部数据源
+        self.progressOutData2InnerData()
+        // 处理items到二维数组中
+        self.progressLvls()
+        // 处理父子关系
+        self.loopEachGroup()
+        // 处理每一个节点的链表层级
+        self.progressEachItemFathersLvl()
+    }
+
     /// 测试做的外部数据源[开始时间排序处理得数据]
     func initData() {
         /// 2019 - 8 - 15  14：00 - 15：00
         let item1 = OutLinkItemModel()
         item1.startTime = Date(timeIntervalSince1970: 1565848800)
-        item1.startTime = Date(timeIntervalSince1970: 1565852400)
+        item1.endTime = Date(timeIntervalSince1970: 1565852400)
         self.allItems.append(item1)
         /// 2019 - 8 - 15  14：30 - 19：30
         let item2 = OutLinkItemModel()
         item2.startTime = Date(timeIntervalSince1970: 1565850600)
-        item2.startTime = Date(timeIntervalSince1970: 1565868600)
+        item2.endTime = Date(timeIntervalSince1970: 1565868600)
         self.allItems.append(item2)
         /// 2019 - 8 - 15  14：45 - 15：30
         let item3 = OutLinkItemModel()
         item3.startTime = Date(timeIntervalSince1970: 1565851500)
-        item3.startTime = Date(timeIntervalSince1970: 1565854205)
+        item3.endTime = Date(timeIntervalSince1970: 1565854205)
         self.allItems.append(item3)
         /// 2019 - 8 - 15  15：30 - 16：00
         let item4 = OutLinkItemModel()
         item4.startTime = Date(timeIntervalSince1970: 1565854205)
-        item4.startTime = Date(timeIntervalSince1970: 1565856000)
+        item4.endTime = Date(timeIntervalSince1970: 1565856000)
         self.allItems.append(item4)
         /// 2019 - 8 - 15  17：00 - 18：00
         let item5 = OutLinkItemModel()
         item5.startTime = Date(timeIntervalSince1970: 1565859600)
-        item5.startTime = Date(timeIntervalSince1970: 1565863200)
+        item5.endTime = Date(timeIntervalSince1970: 1565863200)
         self.allItems.append(item5)
         /// 2019 - 8 - 15  17：30 - 18：00
         let item6 = OutLinkItemModel()
         item6.startTime = Date(timeIntervalSince1970: 1565861400)
-        item6.startTime = Date(timeIntervalSince1970: 1565863200)
+        item6.endTime = Date(timeIntervalSince1970: 1565863200)
         self.allItems.append(item6)
         /// 2019 - 8 - 15  20：00 - 21：00
         let item7 = OutLinkItemModel()
         item7.startTime = Date(timeIntervalSince1970: 1565870400)
-        item7.startTime = Date(timeIntervalSince1970: 1565874000)
+        item7.endTime = Date(timeIntervalSince1970: 1565874000)
         self.allItems.append(item7)
     }
 
-    /// 将外部数据数组转为内部数据数组
+    /// [1]将外部数据数组转为内部数据数组
     func progressOutData2InnerData() {
         for eachItem in self.allItems {
             let realItem = LinkItem(model: eachItem)
@@ -91,28 +102,56 @@ class TimelineProgress: NSObject {
         }
     }
 
-    /// 从某一个数组中获取某一级别的数据，并做引用存储
-    private func getEachLvlItems(lvl: Int, arrs: [LinkItem]) {
-        if arrs.count == 0 { return }
+    /// [2-1]循环处理所有事件，将之添加到对应数组中
+    private func progressLvls() {
+        var copyItemsArr = self.progressItems
+        var lvl = 0
+        while !copyItemsArr.isEmpty {
+            let eachLvl = self.getEachLvlItems(lvl: lvl, arrs: copyItemsArr)
+            self.lvGroups.append(eachLvl.result)
+            // 将结果集从大数组中移除
+            var revertIdx = eachLvl.resultIdx
+            revertIdx.reverse()
+            for eachIdx in 0 ..< revertIdx.count {
+                copyItemsArr.remove(at: revertIdx[eachIdx])
+            }
+            lvl += 1
+        }
+    }
+
+    /// [2-2]从某一个数组中获取某一级别的数据，并做引用存储
+    private func getEachLvlItems(lvl: Int, arrs: [LinkItem]) -> (result: [LinkItem], resultIdx: [Int]) {
+        if arrs.count == 0 { return ([], []) }
         var endTime = Date()
         var result = [LinkItem]()
+        var resultIdx: [Int] = []
         for idx in 0 ..< arrs.count {
             if idx == 0 {
                 result.append(arrs[idx])
+                resultIdx.append(idx)
                 endTime = arrs[idx].endTime
                 arrs[idx].lvl = lvl
                 continue
             }
             if arrs[idx].startTime >= endTime {
                 result.append(arrs[idx])
+                resultIdx.append(idx)
                 endTime = arrs[idx].endTime
                 arrs[idx].lvl = lvl
             }
         }
-        self.lvGroups.append(result)
+        return (result, resultIdx)
     }
 
-    /// 遍历某一个层级的所有item,找到所有它的父节点，添加到自己属性中
+    /// [3-1]循环处理二维数组中的每一个数组，处理父子关系
+    private func loopEachGroup() {
+        for eachItem in self.lvGroups {
+            self.loopProgressEachLvItems(arrs: eachItem)
+        }
+    }
+
+    /// [3-2]遍历某一个层级的所有item,找到所有它的父节点，添加到自己属性中
+    /// 根据父亲节点处理父节点的孩子节点
     private func loopProgressEachLvItems(arrs: [LinkItem]) {
         guard let firstItem = arrs.first else { return }
         let currentIvl: Int = firstItem.lvl
@@ -125,13 +164,16 @@ class TimelineProgress: NSObject {
             for eachFatherItem in fatherGroup {
                 if !eachItem.calculate2AnotherItemHaveSameTime(anotherItem: eachFatherItem) { continue }
                 eachItem.fatherItems.append(eachFatherItem)
+                eachFatherItem.sonItems.append(eachItem)
             }
         }
     }
 
-    /// 遍历每一个事件，处理此事件的父节点的层级
+    /// [4]遍历每一个事件，处理此事件的父节点的层级
     private func progressEachItemFathersLvl() {
-
+        for eachItem in self.progressItems {
+            eachItem.lvlCount = eachItem.progreessFatherItemLvl()
+        }
     }
 
 }
@@ -155,14 +197,17 @@ class LinkItem: NSObject {
     /// 事件的结束时间
     var endTime: Date!
 
-    /// 当前item所在的层级
+    /// 当前item所在的层级, 最小为0
     var lvl: Int = 0
 
-    /// 当前item链条中层级层数
-    var lvlCount: Int = 0
+    /// 当前item链条中层级层数，最小为1
+    var lvlCount: Int = 1
 
     /// 当前节点的父节点数组
     var fatherItems: [LinkItem] = []
+
+    /// 当前节点的孩子节点数组
+    var sonItems: [LinkItem] = []
 
     /// 为debug做的nickname
     // var debugNickName: String = ""
@@ -181,16 +226,14 @@ class LinkItem: NSObject {
         return true
     }
 
-//    func progressFathersItemLvl(currentLv: Int?) {
-//        if currentLv == nil {
-//
-//        } else {
-//            // 最后一级
-//        }
-//        for eachItem in self.fatherItems {
-//            eachItem.lvlCount = self.lvl + 1
-//        }
-//    }
+    /// 设置每一个item中lvlcount数值
+    /// 处理每一个节点 ； 根据自己的孩子节点获得最底层孩子节点的lvl
+    func progreessFatherItemLvl() -> Int {
+        guard let firstSonItem = self.sonItems.first else {
+            return self.lvl + 1
+        }
+        return firstSonItem.progreessFatherItemLvl()
+    }
 }
 
 /// 链表item extension : comparable
@@ -205,5 +248,9 @@ extension LinkItem: Comparable {
         } else {
             return lhs.startTime < rhs.startTime
         }
+    }
+
+    static func == (lhs: LinkItem, rhs: LinkItem) -> Bool {
+        return lhs.startTime == rhs.startTime && lhs.endTime == rhs.endTime
     }
 }

@@ -15,9 +15,14 @@ import UIKit
 
 class ViewController: UIViewController {
 
+    let timeLine = TimelineProgress()
+
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view.
+
+        timeLine.lifeCircleProgress()
+
+        print("gos")
     }
 
 
